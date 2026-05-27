@@ -1,0 +1,364 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ==========================================================
+   全局基础样式
+   ========================================================== */
+@layer base {
+  body {
+    @apply bg-zinc-900 text-zinc-100 font-sans antialiased overflow-hidden select-none;
+    background-image:
+      radial-gradient(circle at 20% 20%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
+      radial-gradient(circle at 80% 80%, rgba(236, 72, 153, 0.12) 0%, transparent 50%),
+      radial-gradient(circle at 50% 50%, rgba(16, 185, 129, 0.08) 0%, transparent 60%);
+  }
+
+  /* 自定义滚动条（精致金属感） */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: rgba(24, 24, 27, 0.6);
+    border-radius: 6px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #3f3f46, #18181b);
+    border-radius: 6px;
+    border: 2px solid rgba(63, 63, 70, 0.6);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #52525b, #27272a);
+  }
+
+  /* 让所有按钮默认具有轻微的平滑过渡与光标手势 */
+  button {
+    @apply transition-transform duration-150;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* 默认聚焦环用发光代替（避免生硬蓝框） */
+  button:focus-visible,
+  a:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.45), 0 0 18px rgba(96, 165, 250, 0.35);
+  }
+}
+
+/* ==========================================================
+   属性类型徽章（保留原有英/中文双版本，并增加玻璃光泽）
+   ========================================================== */
+.type-草, .type-grass { @apply bg-green-500 text-white; }
+.type-火, .type-fire { @apply bg-red-500 text-white; }
+.type-水, .type-water { @apply bg-blue-500 text-white; }
+.type-电, .type-electric { @apply bg-yellow-400 text-zinc-900; }
+.type-一般, .type-normal { @apply bg-zinc-400 text-white; }
+.type-毒, .type-poison { @apply bg-purple-500 text-white; }
+.type-飞行, .type-flying { @apply bg-indigo-300 text-white; }
+.type-超能力, .type-psychic { @apply bg-pink-500 text-white; }
+.type-妖精, .type-fairy { @apply bg-pink-300 text-zinc-900; }
+.type-格斗, .type-fighting { @apply bg-orange-700 text-white; }
+.type-地面, .type-ground { @apply bg-yellow-600 text-white; }
+.type-岩石, .type-rock { @apply bg-yellow-800 text-white; }
+.type-虫, .type-bug { @apply bg-lime-500 text-white; }
+.type-幽灵, .type-ghost { @apply bg-purple-800 text-white; }
+.type-钢, .type-steel { @apply bg-gray-400 text-white; }
+.type-冰, .type-ice { @apply bg-cyan-300 text-zinc-900; }
+.type-龙, .type-dragon { @apply bg-indigo-600 text-white; }
+.type-恶, .type-dark { @apply bg-gray-800 text-white; }
+
+/* 属性徽章通用"晶化光泽" */
+[class*="type-"] {
+  position: relative;
+  overflow: hidden;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+}
+[class*="type-"]::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0) 45%, rgba(0, 0, 0, 0.15) 100%);
+  pointer-events: none;
+}
+
+/* ==========================================================
+   HP 血条配色（带渐变感）
+   ========================================================== */
+.hp-green {
+  background: linear-gradient(180deg, #4ade80 0%, #16a34a 60%, #15803d 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), inset 0 -2px 2px rgba(0, 0, 0, 0.25);
+}
+.hp-yellow {
+  background: linear-gradient(180deg, #fde047 0%, #eab308 60%, #a16207 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), inset 0 -2px 2px rgba(0, 0, 0, 0.25);
+}
+.hp-red {
+  background: linear-gradient(180deg, #f87171 0%, #dc2626 60%, #991b1b 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), inset 0 -2px 2px rgba(0, 0, 0, 0.25);
+  animation: hpLowPulse 1.2s ease-in-out infinite;
+}
+
+@keyframes hpLowPulse {
+  0%, 100% { filter: brightness(1); }
+  50% { filter: brightness(1.25) saturate(1.3); }
+}
+
+/* ==========================================================
+   通用 UI 组件样式（游戏级别的质感）
+   ========================================================== */
+@layer components {
+  /* 玻璃拟真面板：半透明背景 + 内描边 + 柔光 */
+  .panel-glass {
+    @apply relative bg-zinc-900/70 border border-white/10 rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.6)];
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+  .panel-glass::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0) 50%);
+    pointer-events: none;
+  }
+
+  /* 精致卡片：白底深色描边 + 多层阴影 */
+  .card-rich {
+    @apply relative bg-gradient-to-b from-white to-zinc-100 border-4 border-zinc-800 rounded-xl shadow-[0_8px_0_rgba(24,24,27,0.5),0_12px_32px_rgba(0,0,0,0.35)];
+  }
+
+  /* 游戏主按钮：立体多层阴影 + 渐变 + 扫光 */
+  .btn-game {
+    @apply relative inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl font-black text-white text-sm uppercase tracking-wider;
+    @apply bg-gradient-to-b from-blue-500 to-blue-700 border-2 border-blue-300/60;
+    box-shadow:
+      0 6px 0 rgba(30, 58, 138, 1),
+      0 8px 18px rgba(30, 58, 138, 0.45),
+      inset 0 1px 0 rgba(255, 255, 255, 0.5),
+      inset 0 -2px 2px rgba(0, 0, 0, 0.2);
+    text-shadow: 0 2px 3px rgba(0, 0, 0, 0.35);
+    overflow: hidden;
+    transition: transform 120ms ease, box-shadow 120ms ease, filter 120ms ease;
+  }
+  .btn-game:hover {
+    filter: brightness(1.08) saturate(1.15);
+    transform: translateY(-1px);
+  }
+  .btn-game:active {
+    transform: translateY(4px);
+    box-shadow:
+      0 2px 0 rgba(30, 58, 138, 1),
+      0 3px 8px rgba(30, 58, 138, 0.45),
+      inset 0 1px 0 rgba(255, 255, 255, 0.5),
+      inset 0 -2px 2px rgba(0, 0, 0, 0.2);
+  }
+  .btn-game:disabled {
+    filter: grayscale(0.7) brightness(0.6);
+    cursor: not-allowed;
+    transform: none;
+  }
+  /* 扫光掠过效果 */
+  .btn-game::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -120%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+    transform: skewX(-20deg);
+    transition: left 700ms ease;
+  }
+  .btn-game:hover::after {
+    left: 130%;
+  }
+
+  /* 按钮配色变体 */
+  .btn-red {
+    @apply from-red-500 to-red-700 border-red-300/60;
+    box-shadow:
+      0 6px 0 rgba(127, 29, 29, 1),
+      0 8px 18px rgba(127, 29, 29, 0.45),
+      inset 0 1px 0 rgba(255, 255, 255, 0.5),
+      inset 0 -2px 2px rgba(0, 0, 0, 0.2);
+  }
+  .btn-red:active {
+    box-shadow:
+      0 2px 0 rgba(127, 29, 29, 1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.5),
+      inset 0 -2px 2px rgba(0, 0, 0, 0.2);
+  }
+  .btn-green {
+    @apply from-emerald-500 to-emerald-700 border-emerald-300/60;
+    box-shadow:
+      0 6px 0 rgba(6, 78, 59, 1),
+      0 8px 18px rgba(6, 78, 59, 0.45),
+      inset 0 1px 0 rgba(255, 255, 255, 0.5),
+      inset 0 -2px 2px rgba(0, 0, 0, 0.2);
+  }
+  .btn-green:active {
+    box-shadow:
+      0 2px 0 rgba(6, 78, 59, 1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.5),
+      inset 0 -2px 2px rgba(0, 0, 0, 0.2);
+  }
+  .btn-gold {
+    @apply from-amber-400 to-orange-600 border-yellow-200/70 text-amber-950;
+    box-shadow:
+      0 6px 0 rgba(124, 45, 18, 1),
+      0 8px 18px rgba(251, 191, 36, 0.45),
+      inset 0 1px 0 rgba(255, 255, 255, 0.6),
+      inset 0 -2px 2px rgba(0, 0, 0, 0.2);
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.4);
+  }
+  .btn-gold:active {
+    box-shadow:
+      0 2px 0 rgba(124, 45, 18, 1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.6),
+      inset 0 -2px 2px rgba(0, 0, 0, 0.2);
+  }
+  .btn-dark {
+    @apply from-zinc-700 to-zinc-900 border-zinc-500/60;
+    box-shadow:
+      0 6px 0 rgba(9, 9, 11, 1),
+      0 8px 18px rgba(0, 0, 0, 0.55),
+      inset 0 1px 0 rgba(255, 255, 255, 0.15),
+      inset 0 -2px 2px rgba(0, 0, 0, 0.3);
+  }
+  .btn-dark:active {
+    box-shadow:
+      0 2px 0 rgba(9, 9, 11, 1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.15),
+      inset 0 -2px 2px rgba(0, 0, 0, 0.3);
+  }
+
+  /* 胶囊状小标签（徽章） */
+  .badge-chip {
+    @apply inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.12), rgba(0, 0, 0, 0.2));
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  }
+
+  /* 模态框关闭按钮（通用 × 按钮） */
+  .modal-close {
+    @apply absolute top-3 right-3 w-10 h-10 flex items-center justify-center rounded-full text-2xl font-black z-10;
+    @apply text-zinc-200 bg-gradient-to-b from-zinc-700 to-zinc-900 border-2 border-zinc-500;
+    box-shadow: 0 4px 0 rgba(9, 9, 11, 1), 0 6px 12px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    transition: transform 120ms ease, filter 120ms ease;
+  }
+  .modal-close:hover {
+    filter: brightness(1.2);
+    transform: scale(1.05);
+  }
+  .modal-close:active {
+    transform: translateY(2px) scale(0.98);
+    box-shadow: 0 1px 0 rgba(9, 9, 11, 1), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  }
+
+  /* 分隔线带点缀 */
+  .divider-fancy {
+    @apply relative h-px my-3 bg-gradient-to-r from-transparent via-zinc-600 to-transparent;
+  }
+  .divider-fancy::after {
+    content: '◆';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #a1a1aa;
+    background: #18181b;
+    padding: 0 8px;
+    font-size: 10px;
+  }
+
+  /* 拖拽浮动按钮（说明/属性克制等） */
+  .btn-floating {
+    @apply relative inline-flex items-center justify-center gap-2 px-4 py-2 rounded-full text-sm font-black text-white uppercase tracking-wider cursor-grab active:cursor-grabbing select-none;
+    background: linear-gradient(180deg, rgba(39, 39, 42, 0.95), rgba(9, 9, 11, 0.95));
+    border: 2px solid rgba(113, 113, 122, 0.7);
+    box-shadow:
+      0 5px 0 rgba(9, 9, 11, 0.9),
+      0 10px 20px rgba(0, 0, 0, 0.5),
+      inset 0 1px 0 rgba(255, 255, 255, 0.18);
+    backdrop-filter: blur(6px);
+    transition: filter 120ms ease, transform 120ms ease;
+  }
+  .btn-floating:hover {
+    filter: brightness(1.15) saturate(1.1);
+  }
+  .btn-floating.btn-floating-blue {
+    background: linear-gradient(180deg, rgba(30, 58, 138, 0.95), rgba(23, 37, 84, 0.95));
+    border-color: rgba(96, 165, 250, 0.7);
+    box-shadow:
+      0 5px 0 rgba(23, 37, 84, 0.9),
+      0 10px 20px rgba(30, 58, 138, 0.6),
+      inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  }
+
+  /* 侧边栏吸附按钮 */
+  .btn-sidebar {
+    @apply relative flex items-center gap-2 pl-3 pr-4 py-3 rounded-r-2xl text-sm font-black text-white tracking-wider cursor-pointer select-none border-y-2 border-r-2 border-l-0 transition-all;
+    background: linear-gradient(90deg, rgba(24, 24, 27, 0.95), rgba(39, 39, 42, 0.95));
+    border-color: rgba(113, 113, 122, 0.6);
+    box-shadow:
+      4px 4px 15px rgba(0, 0, 0, 0.4),
+      inset 1px 1px 0 rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(6px);
+  }
+  .btn-sidebar:hover {
+    padding-left: 1.25rem;
+    filter: brightness(1.2);
+  }
+  .btn-sidebar:active {
+    filter: brightness(0.9);
+  }
+  .btn-sidebar.btn-sidebar-blue {
+    background: linear-gradient(90deg, rgba(23, 37, 84, 0.95), rgba(30, 58, 138, 0.95));
+    border-color: rgba(59, 130, 246, 0.6);
+    box-shadow:
+      4px 4px 15px rgba(30, 58, 138, 0.4),
+      inset 1px 1px 0 rgba(255, 255, 255, 0.2);
+  }
+}
+
+/* ==========================================================
+   动画关键帧
+   ========================================================== */
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(200%); }
+}
+@keyframes floatUpDown {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+@keyframes glowPulse {
+  0%, 100% { box-shadow: 0 0 12px rgba(96, 165, 250, 0.4); }
+  50% { box-shadow: 0 0 24px rgba(96, 165, 250, 0.8); }
+}
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-float { animation: floatUpDown 3s ease-in-out infinite; }
+.animate-glow-pulse { animation: glowPulse 2s ease-in-out infinite; }
+.animate-fade-in-up { animation: fadeInUp 400ms ease-out both; }
+
+/* 通用的内边发光装饰，加在战斗角色卡、精灵展示卡上 */
+.inner-shine {
+  position: relative;
+}
+.inner-shine::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(115deg, transparent 40%, rgba(255, 255, 255, 0.18) 50%, transparent 60%);
+  transform: translateX(-100%);
+  animation: shimmer 3.5s ease-in-out infinite;
+  pointer-events: none;
+}
